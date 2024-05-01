@@ -12,6 +12,7 @@ import { MdPhoneIphone } from "react-icons/md";
 import { SiNintendo } from "react-icons/si";
 import { BsGlobe } from "react-icons/bs";
 import { IconType } from "react-icons";
+import CriticScore from "./CriticScore";
 
 interface GameCardProps {
   game: Game;
@@ -35,10 +36,13 @@ const GameCard = ({ game }: GameCardProps) => {
       <Image src={game.background_image} />
       <CardBody>
         <Heading fontSize="2xl">{game.name}</Heading>
-        <HStack marginY={1}>
-          {game.parent_platforms.map(({ platform }) => (
-            <Icon as={iconMap[platform.slug]} color="gray.500" />
-          ))}
+        <HStack marginY={1} justifyContent={"space-between"}>
+          <HStack>
+            {game.parent_platforms.map(({ platform }) => (
+              <Icon as={iconMap[platform.slug]} color="gray.500" />
+            ))}
+          </HStack>
+          <CriticScore score={game.metacritic} />
         </HStack>
       </CardBody>
     </Card>
