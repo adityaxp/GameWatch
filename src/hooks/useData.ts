@@ -1,41 +1,46 @@
-import React from "react";
+import { AxiosRequestConfig, CanceledError } from "axios";
+import { useEffect, useState } from "react";
 import ApiClient from "../services/ApiClient";
-import { CanceledError } from "axios";
 
 interface FetchResponse<T> {
   count: number;
   results: T[];
 }
 
-const useData = <T>(endpoint: string) => {
-  const [data, setGames] = React.useState<T[]>([]);
-  const [error, setError] = React.useState<string>("");
-  const [loading, setLoading] = React.useState<boolean>(false);
+const useData = <T>(
+  endpoint: string,
+  requestConfig?: AxiosRequestConfig,
+  deps?: any[]
+) => {
+  const [data, setData] = useState<T[]>([]);
+  const [error, setError] = useState("");
+  const [isLoading, setLoading] = useState(false);
 
-  React.useEffect(() => {
-    const controller = new AbortController();
+  useEffect(
+    () => {
+      const controller = new AbortController();
 
-    setLoading(true);
-
-    ApiClient.get<FetchResponse<T>>(endpoint, { signal: controller.signal })
-      .then((res) => {
-        setGames(res.data.results);
-        setLoading(false);
+      setLoading(true);
+      ApiClient.get<FetchResponse<T>>(endpoint, {
+        signal: controller.signal,
+        ...requestConfig,
       })
-      .catch((err: Error) => {
-        if (err instanceof CanceledError) {
+        .then((res) => {
+          setData(res.data.results);
           setLoading(false);
-          return;
-        } else {
-          setLoading(false);
+        })
+        .catch((err) => {
+          if (err instanceof CanceledError) return;
           setError(err.message);
-        }
-      });
+          setLoading(false);
+        });
 
-    return () => controller.abort();
-  }, []);
+      return () => controller.abort();
+    },
+    deps ? [...deps] : []
+  );
 
-  return { data, error, loading };
+  return { data, error, isLoading };
 };
 
 export default useData;
