@@ -36,8 +36,7 @@ const GameCard = ({ game }: GameCardProps) => {
     <Card borderRadius={10} overflow="hidden">
       <Image src={getCroppedImageUrl(game.background_image)} />
       <CardBody>
-        <Heading fontSize="2xl">{game.name}</Heading>
-        <HStack marginY={1} justifyContent={"space-between"}>
+        <HStack marginY={1} justifyContent={"space-between"} marginBottom={3}>
           <HStack>
             {game.parent_platforms.map(({ platform }) => (
               <Icon
@@ -48,7 +47,10 @@ const GameCard = ({ game }: GameCardProps) => {
             ))}
           </HStack>
         </HStack>
-        <CriticScore score={game.metacritic} />
+        <HStack marginY={1} justifyContent={"space-between"}>
+          <Heading fontSize="2xl">{game.name}</Heading>
+          <CriticScore score={game.metacritic} />
+        </HStack>
       </CardBody>
     </Card>
   );
