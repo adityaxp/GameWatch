@@ -6,15 +6,36 @@ interface Props {
   sortOrder: string;
 }
 
-function SortSelector() {
+function SortSelector({ onSelectSortOrder, sortOrder }: Props) {
+  const sortOrders = [
+    { value: "", label: "Relevance" },
+    { value: "-added", label: "Date added" },
+    { value: "name", label: "Name" },
+    { value: "-released", label: "Release date" },
+    { value: "-metacritic", label: "Popularity" },
+    { value: "-rating", label: "Average rating" },
+  ];
+
+  const currentSortOrder = sortOrders.find(
+    (order) => order.value === sortOrder
+  );
+
   return (
     <div style={{ paddingLeft: 10, paddingTop: 20 }}>
       <Menu>
         <MenuButton as={Button} rightIcon={<BsChevronDown />}>
-          Order By: Relevance
+          Order by: {currentSortOrder?.label || "Relevance"}
         </MenuButton>
         <MenuList>
-          <MenuItem>Hello</MenuItem>
+          {sortOrders.map((order) => (
+            <MenuItem
+              onClick={() => onSelectSortOrder(order.value)}
+              key={order.value}
+              value={order.value}
+            >
+              {order.label}
+            </MenuItem>
+          ))}
         </MenuList>
       </Menu>
     </div>
