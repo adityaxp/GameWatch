@@ -47,8 +47,8 @@ const GameCard = ({ game }: GameCardProps) => {
               />
             ))}
           </HStack>
-          <CriticScore score={game.metacritic} />
         </HStack>
+        <CriticScore score={game.metacritic} />
       </CardBody>
     </Card>
   );
